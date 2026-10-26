@@ -25,7 +25,10 @@ buddy_workspace/
 └── startup/
     └── website-dev/                       # 出海建站线
         ├── frontend/                      # 前端技术架构
-        │   └── tech-architecture-spec.md  # 16 条架构约束（TR-01~16），含验证命令
+        │   ├── tech-architecture-spec.md  # 16 条架构约束（TR-01~16），含验证命令
+        │   └── decisions/                # 技术架构决策记录（设计，不代表已上线）
+        │       ├── ADR-001-astro-多站点架构.md     # SSG/SSR、Vue、站点/内容分离、TR 评审
+        │       └── ADR-002-环境隔离与发布流程.md    # local/staging/prod、域名、CI/CD、回滚
         └── seo-playbook/                  # SEO 方法论与门禁清单
             ├── SKILL.md                   # 8 阶段主清单 + 10 条铁律 + 红线条目
             └── references/
@@ -49,7 +52,9 @@ buddy_workspace/
 | 你要做的事 | 先读 | 关键动作 |
 |---|---|---|
 | **选技术架构 / 写第一行代码** | `frontend/tech-architecture-spec.md` | 先确认 TR-01/02/03 怎么满足，再选框架 |
-| **评估一个架构方案好不好** | 同上，第 5 节评审问卷 | 按"默认行为是否满足"打分，不按"理论能否实现" |
+| **评估一个架构方案好不好** | 同上，第 5 节评审问卷 + `frontend/decisions/ADR-001-*` | 按"默认行为是否满足"打分，不按"理论能否实现" |
+| **搭建新站或扩成多站** | `frontend/decisions/ADR-001-*` | 共享 Site/Content/Template 协议，按单站规模实现 |
+| **设置环境/域名、部署、内容发布或回滚** | `frontend/decisions/ADR-002-*` | 验证环境隔离、发布审批、SEO 防护和回滚 |
 | **判断一个关键词值不值得做** | `seo-playbook/references/01` | 算 KDRoi + KGR，看词龄，人工看 SERP 前 10 |
 | **规划站点结构 / 页面类型** | `seo-playbook/references/02` | 一个关键词一个域名；页面深度 ≤3；别默认做博客 |
 | **准备上线，做放行审核** | `seo-playbook/SKILL.md` + `references/07` | 跑 8 阶段 P0 项，任一红线命中就停 |
@@ -101,4 +106,5 @@ buddy_workspace/
 
 ## 7. 变更记录
 
+- **2026-10-26** 新增 ADR-001（Astro 混合渲染与多站架构选型、TR 评审）和 ADR-002（多环境、域名、代码/内容发布、回滚）。两份均为待 PoC 验证的 [工程] 设计，不改变哥飞原始规则。
 - **2026-10-26** 初始化。收录前端架构约束规格（16 条 TR）与 SEO 方法论清单（8 阶段 / 23 篇原文精读）。
