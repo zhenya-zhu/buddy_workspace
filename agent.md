@@ -26,6 +26,7 @@ buddy_workspace/
     └── website-dev/                       # 出海建站线
         ├── frontend/                      # 前端技术架构
         │   ├── tech-architecture-spec.md  # 16 条架构约束（TR-01~16），含验证命令
+        │   ├── development-roadmap.md     # 首站开发 M0~M7：依赖、顺序、交付物与放行门禁
         │   └── decisions/                # 技术架构决策记录（设计，不代表已上线）
         │       ├── ADR-001-astro-多站点架构.md     # SSG/SSR、Vue、站点/内容分离、TR 评审
         │       └── ADR-002-环境隔离与发布流程.md    # local/staging/prod、域名、CI/CD、回滚
@@ -52,6 +53,7 @@ buddy_workspace/
 | 你要做的事 | 先读 | 关键动作 |
 |---|---|---|
 | **选技术架构 / 写第一行代码** | `frontend/tech-architecture-spec.md` | 先确认 TR-01/02/03 怎么满足，再选框架 |
+| **规划第一个站从零到上线的开发顺序** | `frontend/development-roadmap.md` | 先完成 M0 选词；按 M1~M7 检查任务、出口和证据；i18n PoC 提前、正式翻译在上线前按需做 |
 | **评估一个架构方案好不好** | 同上，第 5 节评审问卷 + `frontend/decisions/ADR-001-*` | 按"默认行为是否满足"打分，不按"理论能否实现" |
 | **搭建新站或扩成多站** | `frontend/decisions/ADR-001-*` | 共享 Site/Content/Template 协议，按单站规模实现 |
 | **设置环境/域名、部署、内容发布或回滚** | `frontend/decisions/ADR-002-*` | 验证环境隔离、发布审批、SEO 防护和回滚 |
@@ -87,6 +89,7 @@ buddy_workspace/
 |---|---|---|
 | 新领域的建站方法论文档 | `startup/website-dev/<领域>/` | `kebab-case.md` |
 | 某个站的架构决策记录（ADR） | `startup/website-dev/frontend/decisions/` | `ADR-001-选astro不用next.md` |
+| 首站开发执行里程碑、门禁与延后事项 | `startup/website-dev/frontend/development-roadmap.md` | 更新 M0–M7 里程碑/验收；具体站点实施证据放其独立代码仓库 |
 | 具体某个站的项目代码 | 另开仓库，不放在这里 | — |
 | 上线审核记录 / 复盘 | `startup/website-dev/seo-playbook/reviews/` | `YYYY-MM-DD-域名.md` |
 
@@ -106,5 +109,6 @@ buddy_workspace/
 
 ## 7. 变更记录
 
+- **2026-10-26** 新增首站开发路线图 `frontend/development-roadmap.md`：M0–M7 工程里程碑、上线 Gate、多语言按需分期、MVP Sprint，区分 SEO Playbook Phase 0–7。
 - **2026-10-26** 新增 ADR-001（Astro 混合渲染与多站架构选型、TR 评审）和 ADR-002（多环境、域名、代码/内容发布、回滚）。两份均为待 PoC 验证的 [工程] 设计，不改变哥飞原始规则。
 - **2026-10-26** 初始化。收录前端架构约束规格（16 条 TR）与 SEO 方法论清单（8 阶段 / 23 篇原文精读）。
