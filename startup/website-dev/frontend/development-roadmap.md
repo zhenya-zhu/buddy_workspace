@@ -6,6 +6,8 @@
 > **范围**：先做一个出海 SEO 站点验证需求、流量和商业模式，后续有真实需求再扩成多站平台。  
 > **依赖**：[技术架构约束 TR-01～16](./tech-architecture-spec.md) · [ADR-001 Astro 多站架构](./decisions/ADR-001-astro-多站点架构.md) · [ADR-002 环境/发布](./decisions/ADR-002-环境隔离与发布流程.md) · [SEO Playbook（Phase 0～7）](../seo-playbook/SKILL.md)
 
+> **具体项目落地**：康复创业首站 Desk Mobility 已按本路线图拆解为产品定位、[MVP PRD](../products/desk-mobility/mvp-prd.md)、[两周用户验证](../products/desk-mobility/validation-experiment.md)与 [DM-001～016 执行任务](../products/desk-mobility/delivery-plan.md)。通用路线图适用于各站；具体项目的医学审核与隐私门禁优先于开发进度。
+
 ## 一句话原则
 
 **早确定不可逆的边界，晚开发昂贵的能力；先有一个可用、可抓取、可部署的核心页面，再增加内容与语言，最后经过发布门禁上线。**
