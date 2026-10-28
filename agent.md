@@ -30,6 +30,13 @@ buddy_workspace/
         │   └── decisions/                # 技术架构决策记录（设计，不代表已上线）
         │       ├── ADR-001-astro-多站点架构.md     # SSG/SSR、Vue、站点/内容分离、TR 评审
         │       └── ADR-002-环境隔离与发布流程.md    # local/staging/prod、域名、CI/CD、回滚
+        ├── products/                      # 具体网站的产品策略/验证方案（非代码）
+        │   └── desk-mobility/            # 康复创业第一站：英语屏幕工作者肩颈活动体验
+        │       ├── README.md              # 总览与任务导航
+        │       ├── product-strategy.md    # 目标人群、定位、商业/安全边界
+        │       ├── mvp-prd.md             # 3分钟体验 + 7天记录与反馈
+        │       ├── validation-experiment.md # 两周 Concierge、20–30人验证
+        │       └── delivery-plan.md      # M0–M7 对齐、DM-001～016 任务
         └── seo-playbook/                  # SEO 方法论与门禁清单
             ├── SKILL.md                   # 8 阶段主清单 + 10 条铁律 + 红线条目
             └── references/
@@ -54,6 +61,7 @@ buddy_workspace/
 |---|---|---|
 | **选技术架构 / 写第一行代码** | `frontend/tech-architecture-spec.md` | 先确认 TR-01/02/03 怎么满足，再选框架 |
 | **规划第一个站从零到上线的开发顺序** | `frontend/development-roadmap.md` | 先完成 M0 选词；按 M1~M7 检查任务、出口和证据；i18n PoC 提前、正式翻译在上线前按需做 |
+| **推进康复创业第一站（Desk Mobility）** | `products/desk-mobility/README.md` + `product-strategy.md` + `mvp-prd.md` + `validation-experiment.md` + `delivery-plan.md` | 先验证 20–30 名英语屏幕工作者的 3 分钟/7 天体验；活动须经临床审核；不做 AI 自诊断 |
 | **评估一个架构方案好不好** | 同上，第 5 节评审问卷 + `frontend/decisions/ADR-001-*` | 按"默认行为是否满足"打分，不按"理论能否实现" |
 | **搭建新站或扩成多站** | `frontend/decisions/ADR-001-*` | 共享 Site/Content/Template 协议，按单站规模实现 |
 | **设置环境/域名、部署、内容发布或回滚** | `frontend/decisions/ADR-002-*` | 验证环境隔离、发布审批、SEO 防护和回滚 |
@@ -88,6 +96,7 @@ buddy_workspace/
 | 内容类型 | 位置 | 命名 |
 |---|---|---|
 | 新领域的建站方法论文档 | `startup/website-dev/<领域>/` | `kebab-case.md` |
+| 具体网站的产品定位 / PRD / 用户实验 / 交付计划 | `startup/website-dev/products/<product-id>/` | `README.md`、`product-strategy.md`、`mvp-prd.md`、`validation-experiment.md`、`delivery-plan.md` |
 | 某个站的架构决策记录（ADR） | `startup/website-dev/frontend/decisions/` | `ADR-001-选astro不用next.md` |
 | 首站开发执行里程碑、门禁与延后事项 | `startup/website-dev/frontend/development-roadmap.md` | 更新 M0–M7 里程碑/验收；具体站点实施证据放其独立代码仓库 |
 | 具体某个站的项目代码 | 另开仓库，不放在这里 | — |
@@ -109,6 +118,7 @@ buddy_workspace/
 
 ## 7. 变更记录
 
+- **2026-10-28** 新增 `products/desk-mobility/` 产品方案：康复 Project 创业切入点（英语屏幕工作者肩颈不适）、3 分钟 Web 体验、7 天反馈闭环、两周人工验证、医疗安全/隐私门禁和 DM-001～016 开发任务；均待实际验证。
 - **2026-10-26** 新增首站开发路线图 `frontend/development-roadmap.md`：M0–M7 工程里程碑、上线 Gate、多语言按需分期、MVP Sprint，区分 SEO Playbook Phase 0–7。
 - **2026-10-26** 新增 ADR-001（Astro 混合渲染与多站架构选型、TR 评审）和 ADR-002（多环境、域名、代码/内容发布、回滚）。两份均为待 PoC 验证的 [工程] 设计，不改变哥飞原始规则。
 - **2026-10-26** 初始化。收录前端架构约束规格（16 条 TR）与 SEO 方法论清单（8 阶段 / 23 篇原文精读）。
