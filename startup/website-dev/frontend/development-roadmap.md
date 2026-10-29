@@ -1,12 +1,16 @@
 # 出海 SEO 首站开发路线图：从 MVP 到多站平台（M0–M7）
 
 > **状态**：推荐实施顺序，未开始执行；每阶段的“通过”必须附实际证据。  
-> **日期**：2026-10-26  
+> **日期**：2026-10-29  
 > **来源等级**：本文的开发排序、部署策略、分期范围均为 **[工程]** 判断；既有 SEO 检查项引用原规格（其来源等级沿用原文件），不改写为 Google 官方要求。  
 > **范围**：先做一个出海 SEO 站点验证需求、流量和商业模式，后续有真实需求再扩成多站平台。  
 > **依赖**：[技术架构约束 TR-01～16](./tech-architecture-spec.md) · [ADR-001 Astro 多站架构](./decisions/ADR-001-astro-多站点架构.md) · [ADR-002 环境/发布](./decisions/ADR-002-环境隔离与发布流程.md) · [SEO Playbook（Phase 0～7）](../seo-playbook/SKILL.md)
 
-> **具体项目落地**：康复创业首站 Desk Mobility 已按本路线图拆解为产品定位、[MVP PRD](../products/desk-mobility/mvp-prd.md)、[两周用户验证](../products/desk-mobility/validation-experiment.md)与 [DM-001～016 执行任务](../products/desk-mobility/delivery-plan.md)。通用路线图适用于各站；具体项目的医学审核与隐私门禁优先于开发进度。
+> **具体项目落地**：康复创业首站 Desk Mobility 已按本路线图拆解为产品定位、[MVP PRD](../products/desk-mobility/mvp-prd.md)、[两周用户验证](../products/desk-mobility/validation-experiment.md)与 [DM-001～020 执行任务](../products/desk-mobility/delivery-plan.md)。通用路线图适用于各站；具体项目的医学审核与隐私门禁优先于开发进度。
+
+## 产品决策层（2026-10-29 补充）
+
+[推断] 写功能清单前按 [产品发现与增长流程](../product-design/discovery-to-growth.md) 完成人群、任务、替代方案与假设卡。产品 Phase 0 的问题/首次价值/重复价值验证可与 M0–M2 并行；工程进度不能代替需求证据。具体 UX、SEO 入口和 App 门禁见 [Desk Mobility 体验设计](../products/desk-mobility/product-experience-design.md)。
 
 ## 一句话原则
 
