@@ -1,7 +1,7 @@
 # buddy_workspace
 
 > 出海建站（独立站 + SEO）的工作区。方法论、架构决策、上线检查标准集中在这里，供人和 agent 共用。
-> 最后更新：2026-10-26
+> 最后更新：2026-10-29
 
 ---
 
@@ -30,13 +30,17 @@ buddy_workspace/
         │   └── decisions/                # 技术架构决策记录（设计，不代表已上线）
         │       ├── ADR-001-astro-多站点架构.md     # SSG/SSR、Vue、站点/内容分离、TR 评审
         │       └── ADR-002-环境隔离与发布流程.md    # local/staging/prod、域名、CI/CD、回滚
+        ├── product-design/                # 通用产品发现与增长决策
+        │   └── discovery-to-growth.md     # 创业方法、Phase 0、证据与扩张门禁
         ├── products/                      # 具体网站的产品策略/验证方案（非代码）
         │   └── desk-mobility/            # 康复创业第一站：英语屏幕工作者肩颈活动体验
         │       ├── README.md              # 总览与任务导航
         │       ├── product-strategy.md    # 目标人群、定位、商业/安全边界
         │       ├── mvp-prd.md             # 3分钟体验 + 7天记录与反馈
         │       ├── validation-experiment.md # 两周 Concierge、20–30人验证
-        │       └── delivery-plan.md      # M0–M7 对齐、DM-001～016 任务
+        │       ├── delivery-plan.md      # M0–M7 对齐、DM-001～020 任务
+        │       ├── product-experience-design.md # SEO / 定位实验 / Web / App 体验
+        │       └── activity-library-research.md # 新综述评审、动作定义与内容准入
         └── seo-playbook/                  # SEO 方法论与门禁清单
             ├── SKILL.md                   # 8 阶段主清单 + 10 条铁律 + 红线条目
             └── references/
@@ -59,6 +63,8 @@ buddy_workspace/
 
 | 你要做的事 | 先读 | 关键动作 |
 |---|---|---|
+| **从产品角度决定先做什么** | `product-design/discovery-to-growth.md` | 先完成目标用户/情境/替代方案与实验卡；产品阶段不等于工程里程碑 |
+| **设计 Desk Mobility 体验或新增活动** | `products/desk-mobility/product-experience-design.md` + `activity-library-research.md` | 两种定位变体共用小流程；动作须定义明确、核验依据并专业审核 |
 | **选技术架构 / 写第一行代码** | `frontend/tech-architecture-spec.md` | 先确认 TR-01/02/03 怎么满足，再选框架 |
 | **规划第一个站从零到上线的开发顺序** | `frontend/development-roadmap.md` | 先完成 M0 选词；按 M1~M7 检查任务、出口和证据；i18n PoC 提前、正式翻译在上线前按需做 |
 | **推进康复创业第一站（Desk Mobility）** | `products/desk-mobility/README.md` + `product-strategy.md` + `mvp-prd.md` + `validation-experiment.md` + `delivery-plan.md` | 先验证 20–30 名英语屏幕工作者的 3 分钟/7 天体验；活动须经临床审核；不做 AI 自诊断 |
@@ -117,6 +123,8 @@ buddy_workspace/
 ---
 
 ## 7. 变更记录
+
+- **2026-10-29** 新增产品发现方法、Desk Mobility 体验设计与新康复研究评审；区分 SEO/文案测试/共享体验/App，收缩初轮变体与活动数，明确证据/审核/发布状态、隐私指标、市场与 App 决策，增加 DM-017～020。研究文档完成不代表用户验证或临床审核通过。
 
 - **2026-10-28** 新增 `products/desk-mobility/` 产品方案：康复 Project 创业切入点（英语屏幕工作者肩颈不适）、3 分钟 Web 体验、7 天反馈闭环、两周人工验证、医疗安全/隐私门禁和 DM-001～016 开发任务；均待实际验证。
 - **2026-10-26** 新增首站开发路线图 `frontend/development-roadmap.md`：M0–M7 工程里程碑、上线 Gate、多语言按需分期、MVP Sprint，区分 SEO Playbook Phase 0–7。

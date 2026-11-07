@@ -1,16 +1,24 @@
 # MVP PRD：3 分钟 Web Check-in + 7 天 Desk Mobility Experiment
 
 > **状态**：实现规格草案；待访谈与临床审核，不代表产品功能已实现。  
-> **2026-10-28** · 基于 [产品定位](./product-strategy.md)、[开发路线图](../../frontend/development-roadmap.md) · 来源标注：[既有讨论] = 康复 Project 2026-09-02/09-24 的可恢复摘要；[新设计] = 当前落地规划。
+> **2026-10-29** · 基于 [产品定位](./product-strategy.md)、[开发路线图](../../frontend/development-roadmap.md) · 来源标注：[既有讨论] = 康复 Project 2026-09-02/09-24 的可恢复摘要；[新设计] = 当前落地规划。
+
+## 2026-10-29 补充约定 [推断 / 工程]
+
+- 共享 system 先只承载一个任务闭环；三种定位假设首轮选两种运行，避免分散小样本。
+- 5–8 项为后续 MVP 候选库；Phase 0 一项审核活动即可，无审核则非运动原型。
+- 活动状态、证据外推与撤回规则按 [动作库研究](./activity-library-research.md)；不得把提供的研究报告直接转换成自动十二周方案。
+- 体验、索引与指标细则按 [产品体验设计](./product-experience-design.md)；通过适用范围问题不代表排除疾病。
+- 统一时间口径：D0 为首访；七天记录窗口为 D0–D6，D7 生成回顾；D1 返回单独观察。D7 查看报告不能再算作七天中的第八个记录日。
 
 ## 1. MVP 用户旅程
 
 ### 首次约 3 分钟核心体验
 
 1. **Choose goal / 选择日常功能目标**：例如“我希望今天在电脑前休息后转头更自如”或“减少工作间不适感”，避免“自测诊断”用语。用户可跳过主观不适量化。
-2. **Safety screen / 最小安全检查**：[新设计] 可选择“否/是/不确定”与帮助链接；风险信号/不确定情况**不进入自动动作流程**，转为专业评估/安全信息。严重/突然症状的提示需由临床审核人员定义，用户能直接退出。
+2. **Applicability / 服务适用范围与安全提示**：[新设计] 可选择“否/是/不确定”与帮助链接；风险信号/不确定情况**不进入自动动作流程**，转为专业评估/安全信息。严重/突然症状的提示需由临床审核人员定义，用户能直接退出。
 3. **Baseline / 功能基线**：0–10 自评舒适度或动作容易程度（精确定义一个量表，不能与医学疼痛量表混用），可选描述“今天最希望改善的一个简单动作/工作情境”。不得要求用户做高风险诱发测试。
-4. **Movement / 2 分钟温和活动**：只从**5–8 个经临床审核**的活动库中呈现一个；显示简洁步骤、常见错误、停止条件、时长、无器械替代。若未完成审核，则整个流程替换为非运动的记录体验。
+4. **Movement / 2 分钟温和活动**：只从**已审核且已发布**的活动库中呈现一个（Phase 0 可只有一项，后续候选规模 5–8 项）；显示简洁步骤、常见错误、停止条件、时长、无器械替代。若未完成审核，则整个流程替换为非运动的记录体验。
 5. **Immediate feedback / 即时反馈**：**Easier / Same / Worse / Unsure**；再问用户是否愿意次日再试一次、是否需要提醒（默认关闭）。
 6. **Next-day feedback / 次日反馈**：询问第二天的体验和功能状态，非因果判定；用户可以不做，允许退出。
 7. **7-day report / 七天趋势**：显示每天记录、活动完成次数、自评体验、缺失天数、用户自身观察，不写“病因”“疗效”“治愈率”。
@@ -30,8 +38,8 @@ landing
            → immediate_feedback
                 ├── Worse → stop_and_safety_guidance
                 └── Else → next_day_opt_in
-                             → daily_check_in (D1...D7)
-                             → seven_day_summary
+                             → daily_check_in (D0...D6)
+                             → seven_day_summary (D7)
 ```
 
 页面 URL 由 Astro 渲染 SEO 文本，只有问答/反馈小组件使用 Vue Island；个人记录在私人/受控的路径里，**不要允许搜索引擎索引个人记录页面**。
@@ -40,10 +48,10 @@ landing
 
 | ID | MVP 功能（P0） | 不做（P2+/探索） | 验收 |
 |---|---|---|---|
-| F01 | 三文案 landing 共用一个体验入口 | 三套互不相干的产品 | 每个入口有 source attribution |
+| F01 | 三种候选文案中先运行两种，共用一个体验入口 | 三套互不相干的产品 | 每个入口有 source attribution |
 | F02 | 目标 + 最小安全筛查（规则驱动） | AI 疾病分类/症状归因 | 触发信号时不出现活动指令 |
 | F03 | 一个自评基线（可跳过） | 视频拍摄、姿态识别 | 记录字段含 timestamp 和量表定义 |
-| F04 | 5–8 个专业审核活动库，单次只推荐一个 | 自动动作生成、大规模视频库 | 每条动作有 reviewer、reviewed_at、stop_rule |
+| F04 | 少量专业审核活动，Phase 0 可一项；单次只展示一个 | 自动动作生成、大规模视频库 | 每条动作有 reviewer、reviewed_at、stop_rule、版本与发布状态；暂停版本不可启动 |
 | F05 | Easier/Same/Worse/Unsure 即时反馈 | 用即时改善判断肌肉病因 | Worse 进入停止/提示流程 |
 | F06 | 可选次日和连续 7 天 check-in | 打卡游戏化强制刺激 | 不反馈也不会自动发送新动作 |
 | F07 | 免费第 7 天基础观察报告 | 诊断报告、风险预测、疗效百分比 | 报告仅包含用户记录的事实与自我观察 |
@@ -90,7 +98,7 @@ interface ExperimentSession {
 
 interface CheckIn {
   sessionId: string;
-  dayIndex: number;              // 0..7
+  dayIndex: number;              // check-in 0..6；D7 为报告日
   recordedAt: string;
   baselineScore?: number;        // 0..10，自定义问题/方向固定
   activityId?: string;           // 经审核、版本化
@@ -109,7 +117,11 @@ interface ApprovedActivity {
   stopRules: string[];
   reviewerId: string;
   reviewedAt: string;
-  isPublished: boolean;
+  status: "candidate" | "in_review" | "approved" | "published" | "paused" | "retired";
+  evidenceRefs: string[];
+  intendedUse: string;
+  approvedMarkets: string[];
+  reviewDueAt?: string;
 }
 ```
 
@@ -131,7 +143,7 @@ interface ApprovedActivity {
 
 ## 6. 流量与产品指标 Event Taxonomy
 
-**不向分析平台发送症状详情、自由文本、个人身份或诊断信息**。仅收集非敏感流程转化事件，需获得必要同意并遵守当地适用规则。
+**以下是受控一方产品事件表，不是第三方 Analytics 上报白名单。** 活动 ID、安全退出等即使没有姓名也可能透露健康信息或推断。最少化采集与访问，依法取得必要同意；对外只用经审核的汇总，不向广告平台发送健康流程数据。症状、分数、自由文本、身份、恢复 token 不进入普通分析日志。
 
 | Event | 重要属性 | 用途 |
 |---|---|---|
@@ -142,7 +154,7 @@ interface ApprovedActivity {
 | activity_started / activity_finished | approved_activity_id | 完成率 |
 | feedback_submitted | 是否已提交（不建议发送具体医疗反馈到第三方 Analytics） | 反馈完成率 |
 | next_day_opt_in | yes/no | 次日意愿 |
-| checkin_day_completed | day_index | D1/D3/D7 活跃 |
+| checkin_day_completed | day_index | D0–D6 记录（D1/D3 回访单列） |
 | report_viewed | yes | 7 日闭环 |
 | checkout_success | price_variant | 真实付费意愿（需支付集成合法合规） |
 
@@ -157,7 +169,7 @@ interface ApprovedActivity {
 - `/seven-day-desk-mobility`：7 天实验如何运作、记录与报告示例。
 - `/about`、`/safety`、`/privacy`、`/terms`：透明度和信任基础；商业展示也不得伪造医学资质。
 
-体验起点 `/start` 可公开访问但对问卷/私人结果部分禁止索引；私有会话/个人报告应认证控制、标记 noindex，并避免 HTML/SSR 缓存暴露身份。三套“仅文案不同”的落地页 **先做非索引实验变体**，不制造相似重复 SEO 页。
+体验起点 `/start` 可公开访问但对问卷/私人结果部分禁止索引；私有会话/个人报告应认证控制、标记 noindex，并避免 HTML/SSR 缓存暴露身份。三种候选文案首轮运行两种。专门招募实验页可 noindex；已有 SEO 页的多 URL A/B 则按 Google 指南使用 canonical/临时 302。两类配置见 [体验设计](./product-experience-design.md)，不制造相似重复 SEO 页。
 
 内容的医学事实要有来源、作者/临床审阅、发布日期和更新记录。参见：<https://developers.google.com/search/docs/fundamentals/creating-helpful-content>、<https://www.nhs.uk/symptoms/neck-pain-and-stiff-neck/>。
 
