@@ -1,7 +1,7 @@
 # buddy_workspace
 
 > 出海建站（独立站 + SEO）的工作区。方法论、架构决策、上线检查标准集中在这里，供人和 agent 共用。
-> 最后更新：2026-10-29
+> 最后更新：2026-11-07
 
 ---
 
@@ -22,39 +22,43 @@
 ```
 buddy_workspace/
 ├── agent.md                              # 本文件：项目总览与导航
-└── startup/
-    └── website-dev/                       # 出海建站线
-        ├── frontend/                      # 前端技术架构
-        │   ├── tech-architecture-spec.md  # 16 条架构约束（TR-01~16），含验证命令
-        │   ├── development-roadmap.md     # 首站开发 M0~M7：依赖、顺序、交付物与放行门禁
-        │   └── decisions/                # 技术架构决策记录（设计，不代表已上线）
-        │       ├── ADR-001-astro-多站点架构.md     # SSG/SSR、Vue、站点/内容分离、TR 评审
-        │       └── ADR-002-环境隔离与发布流程.md    # local/staging/prod、域名、CI/CD、回滚
-        ├── product-design/                # 通用产品发现与增长决策
-        │   └── discovery-to-growth.md     # 创业方法、Phase 0、证据与扩张门禁
-        ├── products/                      # 具体网站的产品策略/验证方案（非代码）
-        │   └── desk-mobility/            # 康复创业第一站：英语屏幕工作者肩颈活动体验
-        │       ├── README.md              # 总览与任务导航
-        │       ├── product-strategy.md    # 目标人群、定位、商业/安全边界
-        │       ├── mvp-prd.md             # 3分钟体验 + 7天记录与反馈
-        │       ├── validation-experiment.md # 两周 Concierge、20–30人验证
-        │       ├── delivery-plan.md      # M0–M7 对齐、DM-001～020 任务
-        │       ├── product-experience-design.md # SEO / 定位实验 / Web / App 体验
-        │       └── activity-library-research.md # 新综述评审、动作定义与内容准入
-        └── seo-playbook/                  # SEO 方法论与门禁清单
-            ├── SKILL.md                   # 8 阶段主清单 + 10 条铁律 + 红线条目
-            └── references/
-                ├── 01-opportunity-keyword.md        # 立项与选词（KDRoi / KGR / 词龄 / 搜索意图）
-                ├── 02-site-architecture.md          # 站点结构与页面策略
-                ├── 03-onpage-seo.md                 # 单页优化（TDH / 密度 / 原创 / 行为信号）
-                ├── 04-technical-seo.md              # 技术 SEO（渲染 / 收录 / 多语言 / robots）
-                ├── 05-links-authority.md            # 内外链
-                ├── 06-monetization-ops.md           # 变现与止损
-                ├── 07-audit-scorecard.md            # 百分制打分卡 + 诊断树
-                ├── 08-sources.md                    # 全部出处 + 数据质量警告
-                ├── 09-coverage-audit.md             # 覆盖率审计（读了什么、没读什么）
-                ├── 10-infra-payment-compliance.md   # 域名 / 部署 / AdSense / 收款 / 备案
-                └── 11-ai-tool-site.md               # AI 工具站专属打法
+├── AGENTS.md                             # 兼容壳：只指向 agent.md，避免两处内容不一致
+├── startup/
+│   └── website-dev/                       # 出海建站线
+│       ├── frontend/                      # 前端技术架构
+│       │   ├── tech-architecture-spec.md  # 16 条架构约束（TR-01~16），含验证命令
+│       │   ├── development-roadmap.md     # 首站开发 M0~M7：依赖、顺序、交付物与放行门禁
+│       │   └── decisions/                # 技术架构决策记录（设计，不代表已上线）
+│       │       ├── ADR-001-astro-多站点架构.md     # SSG/SSR、Vue、站点/内容分离、TR 评审
+│       │       └── ADR-002-环境隔离与发布流程.md    # local/staging/prod、域名、CI/CD、回滚
+│       ├── product-design/                # 通用产品发现与增长决策
+│       │   └── discovery-to-growth.md     # 创业方法、Phase 0、证据与扩张门禁
+│       ├── products/                      # 具体网站的产品策略/验证方案（非代码）
+│       │   └── desk-mobility/            # 康复创业第一站：英语屏幕工作者肩颈活动体验
+│       │       ├── README.md              # 总览与任务导航
+│       │       ├── product-strategy.md    # 目标人群、定位、商业/安全边界
+│       │       ├── mvp-prd.md             # 3分钟体验 + 7天记录与反馈
+│       │       ├── validation-experiment.md # 两周 Concierge、20–30人验证
+│       │       ├── delivery-plan.md      # M0–M7 对齐、DM-001～020 任务
+│       │       ├── product-experience-design.md # SEO / 定位实验 / Web / App 体验
+│       │       └── activity-library-research.md # 新综述评审、动作定义与内容准入
+│       └── seo-playbook/                  # SEO 方法论与门禁清单
+│           ├── SKILL.md                   # 8 阶段主清单 + 10 条铁律 + 红线条目
+│           └── references/
+│               ├── 01-opportunity-keyword.md        # 立项与选词（KDRoi / KGR / 词龄 / 搜索意图）
+│               ├── 02-site-architecture.md          # 站点结构与页面策略
+│               ├── 03-onpage-seo.md                 # 单页优化（TDH / 密度 / 原创 / 行为信号）
+│               ├── 04-technical-seo.md              # 技术 SEO（渲染 / 收录 / 多语言 / robots）
+│               ├── 05-links-authority.md            # 内外链
+│               ├── 06-monetization-ops.md           # 变现与止损
+│               ├── 07-audit-scorecard.md            # 百分制打分卡 + 诊断树
+│               ├── 08-sources.md                    # 全部出处 + 数据质量警告
+│               ├── 09-coverage-audit.md             # 覆盖率审计（读了什么、没读什么）
+│               ├── 10-infra-payment-compliance.md   # 域名 / 部署 / AdSense / 收款 / 备案
+│               └── 11-ai-tool-site.md               # AI 工具站专属打法
+└── vps_manage/                           # 唯一放在本仓库的代码：本机 VPS 网络诊断
+    ├── netcheck.py                       # Python 3.9+ 标准库；TCP 建连成功率、p50/p95，可选 ICMP / iperf3 / HTTPS
+    └── README.md                         # 用法、默认测速端点、结果解读与已知限制
 ```
 
 ---
@@ -71,6 +75,7 @@ buddy_workspace/
 | **评估一个架构方案好不好** | 同上，第 5 节评审问卷 + `frontend/decisions/ADR-001-*` | 按"默认行为是否满足"打分，不按"理论能否实现" |
 | **搭建新站或扩成多站** | `frontend/decisions/ADR-001-*` | 共享 Site/Content/Template 协议，按单站规模实现 |
 | **设置环境/域名、部署、内容发布或回滚** | `frontend/decisions/ADR-002-*` | 验证环境隔离、发布审批、SEO 防护和回滚 |
+| **选 VPS / 判断某条线路延迟行不行** | `vps_manage/README.md` | 在**实际使用的网络**上跑 `python3 vps_manage/netcheck.py`，看 TCP 成功率与 p95，跨时段复测；单次 Ping 不作结论 |
 | **判断一个关键词值不值得做** | `seo-playbook/references/01` | 算 KDRoi + KGR，看词龄，人工看 SERP 前 10 |
 | **规划站点结构 / 页面类型** | `seo-playbook/references/02` | 一个关键词一个域名；页面深度 ≤3；别默认做博客 |
 | **准备上线，做放行审核** | `seo-playbook/SKILL.md` + `references/07` | 跑 8 阶段 P0 项，任一红线命中就停 |
@@ -106,9 +111,10 @@ buddy_workspace/
 | 某个站的架构决策记录（ADR） | `startup/website-dev/frontend/decisions/` | `ADR-001-选astro不用next.md` |
 | 首站开发执行里程碑、门禁与延后事项 | `startup/website-dev/frontend/development-roadmap.md` | 更新 M0–M7 里程碑/验收；具体站点实施证据放其独立代码仓库 |
 | 具体某个站的项目代码 | 另开仓库，不放在这里 | — |
+| 本机诊断 / 运维小脚本（非站点业务代码） | `vps_manage/` 或同级新目录 | `kebab-case.py` + 同目录 `README.md`；单文件、纯标准库优先 |
 | 上线审核记录 / 复盘 | `startup/website-dev/seo-playbook/reviews/` | `YYYY-MM-DD-域名.md` |
 
-**不要**把这个仓库变成代码仓库。它只放「标准、决策、复盘」，代码在各自的 repo。
+**不要**把这个仓库变成代码仓库。它只放「标准、决策、复盘」，代码在各自的 repo。唯一例外是 `vps_manage/`：单文件、纯标准库的本机诊断脚本，不承载任何站点业务逻辑。
 
 ---
 
@@ -124,6 +130,7 @@ buddy_workspace/
 
 ## 7. 变更记录
 
+- **2026-11-07** 新增 `vps_manage/`（`netcheck.py` + README）：在实际访问网络上做 TCP 建连成功率与 p50/p95 测试，可选 ICMP / iperf3 / HTTPS 连通性，报告自动写到被 `.gitignore` 排除的 `reports/`。**测的是「当前网络到某个指定端点」**，不代表 VPS 整体质量，也不构成 SLA 或供应商排名。同时把 `agent.md` 目录结构与任务路由补齐到含 `AGENTS.md` 和 `vps_manage/`。
 - **2026-10-29** 新增产品发现方法、Desk Mobility 体验设计与新康复研究评审；区分 SEO/文案测试/共享体验/App，收缩初轮变体与活动数，明确证据/审核/发布状态、隐私指标、市场与 App 决策，增加 DM-017～020。研究文档完成不代表用户验证或临床审核通过。
 
 - **2026-10-28** 新增 `products/desk-mobility/` 产品方案：康复 Project 创业切入点（英语屏幕工作者肩颈不适）、3 分钟 Web 体验、7 天反馈闭环、两周人工验证、医疗安全/隐私门禁和 DM-001～016 开发任务；均待实际验证。
