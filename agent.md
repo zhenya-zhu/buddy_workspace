@@ -23,6 +23,11 @@
 buddy_workspace/
 ├── agent.md                              # 本文件：项目总览与导航
 ├── AGENTS.md                             # 兼容壳：只指向 agent.md，避免两处内容不一致
+├── skills/                              # 共享 Skill/方法论引用索引；不复制上游正文
+│   ├── README.md                         # 索引入口、路由与 Agent 使用协议
+│   ├── gstack.md                         # 创业、产品、工程流程（外部引用）
+│   ├── axiomatic-design.md               # 公理设计（外部引用）
+│   └── crash-course-learning-okf-factory.md # 课程学习 OKF 工厂（外部引用）
 ├── startup/
 │   └── website-dev/                       # 出海建站线
 │       ├── frontend/                      # 前端技术架构
@@ -67,6 +72,7 @@ buddy_workspace/
 
 | 你要做的事 | 先读 | 关键动作 |
 |---|---|---|
+| **找可复用的外部 Skill / 方法论** | `skills/README.md` | 先按任务找索引卡片，再读上游仓库真实入口与依赖；**引用不等于安装或已执行** |
 | **从产品角度决定先做什么** | `product-design/discovery-to-growth.md` | 先完成目标用户/情境/替代方案与实验卡；产品阶段不等于工程里程碑 |
 | **设计 Desk Mobility 体验或新增活动** | `products/desk-mobility/product-experience-design.md` + `activity-library-research.md` | 两种定位变体共用小流程；动作须定义明确、核验依据并专业审核 |
 | **选技术架构 / 写第一行代码** | `frontend/tech-architecture-spec.md` | 先确认 TR-01/02/03 怎么满足，再选框架 |
@@ -106,6 +112,7 @@ buddy_workspace/
 
 | 内容类型 | 位置 | 命名 |
 |---|---|---|
+| 外部 Skill / 方法论的引用索引 | `skills/` | `README.md` + `<slug>.md`；保留原始链接，不复制全文 |
 | 新领域的建站方法论文档 | `startup/website-dev/<领域>/` | `kebab-case.md` |
 | 具体网站的产品定位 / PRD / 用户实验 / 交付计划 | `startup/website-dev/products/<product-id>/` | `README.md`、`product-strategy.md`、`mvp-prd.md`、`validation-experiment.md`、`delivery-plan.md` |
 | 某个站的架构决策记录（ADR） | `startup/website-dev/frontend/decisions/` | `ADR-001-选astro不用next.md` |
@@ -129,6 +136,8 @@ buddy_workspace/
 ---
 
 ## 7. 变更记录
+
+- **2026-11-07** 新增 `skills/` 外部 Skill / 方法论索引：gstack、axiomatic-design、crash-course-learning-okf-factory 的源地址、使用场景与 Agent 使用协议。仅记录引用，不镜像上游，也不代表 Skill 已安装；同时把本仓库已有的 SEO Playbook 纳入索引，并更新任务路由。
 
 - **2026-11-07** 新增 `vps_manage/`（`netcheck.py` + README）：在实际访问网络上做 TCP 建连成功率与 p50/p95 测试，可选 ICMP / iperf3 / HTTPS 连通性，报告自动写到被 `.gitignore` 排除的 `reports/`。**测的是「当前网络到某个指定端点」**，不代表 VPS 整体质量，也不构成 SLA 或供应商排名。同时把 `agent.md` 目录结构与任务路由补齐到含 `AGENTS.md` 和 `vps_manage/`。
 - **2026-10-29** 新增产品发现方法、Desk Mobility 体验设计与新康复研究评审；区分 SEO/文案测试/共享体验/App，收缩初轮变体与活动数，明确证据/审核/发布状态、隐私指标、市场与 App 决策，增加 DM-017～020。研究文档完成不代表用户验证或临床审核通过。
