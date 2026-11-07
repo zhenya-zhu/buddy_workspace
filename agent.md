@@ -22,6 +22,9 @@
 ```
 buddy_workspace/
 ├── agent.md                              # 本文件：项目总览与导航
+├── ideas/                                # 项目想法与探索入口
+│   ├── README.md
+│   └── 体态康复/                         # 项目总览、产品、研究边界与验证决策
 ├── AGENTS.md                             # 兼容壳：只指向 agent.md，避免两处内容不一致
 ├── skills/                              # 共享 Skill/方法论引用索引；不复制上游正文
 │   ├── README.md                         # 索引入口、路由与 Agent 使用协议
@@ -72,6 +75,7 @@ buddy_workspace/
 
 | 你要做的事 | 先读 | 关键动作 |
 |---|---|---|
+| **查看/继续体态康复项目的总体思考** | `ideas/体态康复/README.md` | 从项目归档入口了解定位、产品、研究与待验证事项；详细规格仍链接到原目录 |
 | **找可复用的外部 Skill / 方法论** | `skills/README.md` | 先按任务找索引卡片，再读上游仓库真实入口与依赖；**引用不等于安装或已执行** |
 | **从产品角度决定先做什么** | `product-design/discovery-to-growth.md` | 先完成目标用户/情境/替代方案与实验卡；产品阶段不等于工程里程碑 |
 | **设计 Desk Mobility 体验或新增活动** | `products/desk-mobility/product-experience-design.md` + `activity-library-research.md` | 两种定位变体共用小流程；动作须定义明确、核验依据并专业审核 |
@@ -136,6 +140,8 @@ buddy_workspace/
 ---
 
 ## 7. 变更记录
+
+- **2026-11-07** 按用户指定新增 `ideas/体态康复/`，集中汇总项目定位、网页/App 与 SEO、研究与边界、验证计划及讨论沿革；链接既有详细规格，未变更产品代码或宣称实际验证完成。
 
 - **2026-11-07** 新增 `skills/` 外部 Skill / 方法论索引：gstack、axiomatic-design、crash-course-learning-okf-factory 的源地址、使用场景与 Agent 使用协议。仅记录引用，不镜像上游，也不代表 Skill 已安装；同时把本仓库已有的 SEO Playbook 纳入索引，并更新任务路由。
 
