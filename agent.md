@@ -1,7 +1,7 @@
 # buddy_workspace
 
 > 出海建站（独立站 + SEO）的工作区。方法论、架构决策、上线检查标准集中在这里，供人和 agent 共用。
-> 最后更新：2026-11-07
+> 最后更新：2026-11-25
 
 ---
 
@@ -39,6 +39,8 @@ buddy_workspace/
 │       │   └── decisions/                # 技术架构决策记录（设计，不代表已上线）
 │       │       ├── ADR-001-astro-多站点架构.md     # SSG/SSR、Vue、站点/内容分离、TR 评审
 │       │       └── ADR-002-环境隔离与发布流程.md    # local/staging/prod、域名、CI/CD、回滚
+│       ├── infrastructure/                 # 共享自托管基础设施
+│       │   └── personal-k3s-platform.md     # Windows/WSL2/K3s、多环境、GPU、验收与迁移
 │       ├── product-design/                # 通用产品发现与增长决策
 │       │   └── discovery-to-growth.md     # 创业方法、Phase 0、证据与扩张门禁
 │       ├── products/                      # 具体网站的产品策略/验证方案（非代码）
@@ -85,6 +87,7 @@ buddy_workspace/
 | **评估一个架构方案好不好** | 同上，第 5 节评审问卷 + `frontend/decisions/ADR-001-*` | 按"默认行为是否满足"打分，不按"理论能否实现" |
 | **搭建新站或扩成多站** | `frontend/decisions/ADR-001-*` | 共享 Site/Content/Template 协议，按单站规模实现 |
 | **设置环境/域名、部署、内容发布或回滚** | `frontend/decisions/ADR-002-*` | 验证环境隔离、发布审批、SEO 防护和回滚 |
+| **搭建个人多业务 K3s 开发平台** | `startup/website-dev/infrastructure/personal-k3s-platform.md` | 先验证 WSL/K3s，再做环境隔离、发布、GPU、备份与稳定性；不替代 ADR-002 的发布门禁 |
 | **选 VPS / 判断某条线路延迟行不行** | `vps_manage/README.md` | 在**实际使用的网络**上跑 `python3 vps_manage/netcheck.py`，看 TCP 成功率与 p95，跨时段复测；单次 Ping 不作结论 |
 | **判断一个关键词值不值得做** | `seo-playbook/references/01` | 算 KDRoi + KGR，看词龄，人工看 SERP 前 10 |
 | **规划站点结构 / 页面类型** | `seo-playbook/references/02` | 一个关键词一个域名；页面深度 ≤3；别默认做博客 |
@@ -140,6 +143,8 @@ buddy_workspace/
 ---
 
 ## 7. 变更记录
+
+- **2026-11-25** 新增 Windows/WSL2 单节点 K3s 个人多业务基础设施方案，包含资源预算、Dev/Test/Prod、Agent 权限、GPU 两阶段接入、备份和验收门禁；设计待本机验证，不代表已部署，不取代既有 Cloudflare Workers 发布选项。
 
 - **2026-11-07** 按用户指定新增 `ideas/体态康复/`，集中汇总项目定位、网页/App 与 SEO、研究与边界、验证计划及讨论沿革；链接既有详细规格，未变更产品代码或宣称实际验证完成。
 
