@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>局域网导航 · Ezio</title>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --surface: #ffffff;
+    --ink: #111827;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --accent: #4f46e5;
+    --radius: 16px;
+    --shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 8px 24px rgba(16, 24, 40, .05);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  .wrap { width: min(1080px, 100% - 36px); margin-inline: auto; }
+
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background: #111827;
+    background-image:
+      radial-gradient(900px 420px at 92% -10%, rgba(99, 102, 241, .42), transparent 70%),
+      radial-gradient(700px 380px at 8% 120%, rgba(20, 184, 166, .22), transparent 70%);
+    color: #fff;
+    padding: 42px 0 34px;
+    border-radius: 0 0 28px 28px;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), transparent);
+    pointer-events: none;
+  }
+  .hero .wrap { position: relative; z-index: 1; }
+  .hero-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+  .eyebrow {
+    margin: 0 0 8px;
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.6);
+    font-weight: 600;
+  }
+  h1 { margin: 0; font-size: clamp(28px, 5vw, 40px); letter-spacing: -.02em; line-height: 1.15; }
+  .subtitle { margin: 10px 0 0; color: rgba(255,255,255,.72); font-size: 14px; }
+  .hero-mark {
+    flex: none;
+    width: 46px; height: 46px;
+    display: grid; place-items: center;
+    border: 1px solid rgba(255,255,255,.24);
+    border-radius: 14px;
+    background: rgba(255,255,255,.08);
+    font-weight: 700; font-size: 15px; letter-spacing: .04em;
+  }
+  .search {
+    margin-top: 26px;
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 13px;
+    padding: 0 12px 0 14px;
+    height: 46px;
+    backdrop-filter: blur(8px);
+  }
+  .search:focus-within { border-color: rgba(255,255,255,.55); background: rgba(255,255,255,.16); }
+  .search svg { flex: none; opacity: .7; }
+  .search input {
+    flex: 1; min-width: 0;
+    border: 0; outline: 0; background: transparent;
+    color: #fff; font: inherit; font-size: 15px;
+  }
+  .search input::placeholder { color: rgba(255,255,255,.55); }
+  .search kbd {
+    flex: none;
+    font: 600 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: rgba(255,255,255,.7);
+    border: 1px solid rgba(255,255,255,.3);
+    border-radius: 5px; padding: 5px 7px;
+  }
+  .refresh {
+    flex: none;
+    border: 1px solid rgba(255,255,255,.3);
+    background: rgba(255,255,255,.1);
+    color: #fff; border-radius: 6px;
+    padding: 5px 9px; font: inherit; font-size: 12px;
+    cursor: pointer;
+  }
+  .refresh:hover { background: rgba(255,255,255,.2); }
+  .refresh:disabled { opacity: .5; cursor: default; }
+
+  main { padding: 30px 0 12px; }
+  .section { margin-bottom: 30px; }
+  .section-head { display: flex; align-items: baseline; gap: 10px; margin: 0 0 13px; }
+  .section-head h2 { margin: 0; font-size: 17px; letter-spacing: -.01em; }
+  .count {
+    font-size: 12px; font-weight: 600;
+    color: var(--muted); background: #e9ebef;
+    border-radius: 999px; padding: 2px 8px;
+  }
+  .section-note { margin: 0 0 13px; color: var(--muted); font-size: 13px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: 13px; }
+
+  .card {
+    position: relative;
+    display: flex; flex-direction: column; gap: 10px;
+    min-height: 138px;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+  }
+  .card:hover { transform: translateY(-2px); border-color: #cbd5e1; box-shadow: 0 4px 8px rgba(16,24,40,.05), 0 14px 30px rgba(16,24,40,.08); }
+  .card:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .card-main { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .card-top { display: flex; align-items: center; gap: 11px; }
+  .badge {
+    flex: none;
+    width: 38px; height: 38px;
+    display: grid; place-items: center;
+    border-radius: 11px;
+    font-size: 16px; font-weight: 700;
+    background: var(--tint); color: var(--tone);
+  }
+  .card h3 { margin: 0; font-size: 15px; font-weight: 650; overflow-wrap: anywhere; }
+  .tag { font-size: 11px; color: var(--tone); background: var(--tint); border-radius: 5px; padding: 2px 6px; white-space: nowrap; }
+  .desc { margin: 0; color: var(--muted); font-size: 13px; min-height: 20px; }
+  .card-bottom { margin-top: auto; display: flex; align-items: center; gap: 8px; }
+  .url {
+    flex: 1; min-width: 0;
+    font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: #475569;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .copy {
+    flex: none;
+    border: 1px solid var(--line); background: #f8fafc;
+    border-radius: 7px; padding: 4px 8px;
+    font: inherit; font-size: 11px; color: var(--muted);
+    cursor: pointer;
+  }
+  .copy:hover { color: var(--ink); border-color: #cbd5e1; }
+  .copy.done { color: #0f766e; border-color: #99f6e4; background: #f0fdfa; }
+
+  [data-group="basics"]    { --tone: #0f766e; --tint: #ccfbf1; }
+  [data-group="production"]{ --tone: #15803d; --tint: #dcfce7; }
+  [data-group="testing"]   { --tone: #b45309; --tint: #fef3c7; }
+  [data-group="lab"]       { --tone: #6d28d9; --tint: #ede9fe; }
+
+  .empty {
+    border: 1px dashed #cbd5e1; border-radius: var(--radius);
+    padding: 22px 16px; text-align: center;
+    color: var(--muted); font-size: 13px; background: rgba(255,255,255,.5);
+  }
+  .empty code { font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: #475569; }
+  .empty a, .foot-note a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+  .no-result { text-align: center; color: var(--muted); padding: 44px 0; font-size: 14px; }
+  [hidden] { display: none !important; }
+
+  footer { padding: 8px 0 34px; color: var(--muted); font-size: 12px; }
+  details { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; }
+  summary { cursor: pointer; font-weight: 600; color: var(--ink); font-size: 13px; }
+  details ul { margin: 12px 0 0; padding-left: 20px; }
+  details li { margin: 5px 0; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .foot-note { margin: 14px 2px 0; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 30px 0 26px; border-radius: 0 0 22px 22px; }
+    .hero-mark { display: none; }
+    .search kbd { display: none; }
+    .grid { grid-template-columns: 1fr; }
+    main { padding-top: 22px; }
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-top">
+      <div>
+        <p class="eyebrow">LAN · 192.168.31.0/24</p>
+        <h1>局域网导航</h1>
+        <p class="subtitle">在家直连，在外走 Tailscale。点开即用，不用记 IP 和端口。</p>
+      </div>
+      <div class="hero-mark" aria-hidden="true">EN</div>
+    </div>
+    <label class="search">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="搜索服务名称、地址或备注…" autocomplete="off" aria-label="搜索服务">
+      <button id="refresh" class="refresh" type="button" title="重新读取条目">刷新</button>
+      <button id="scan" class="refresh" type="button" title="扫描局域网 Web 服务">扫描</button>
+      <kbd>/</kbd>
+    </label>
+  </div>
+</header>
+
+<main class="wrap" id="groups"></main>
+
+<footer class="wrap">
+  <details>
+    <summary>网络备忘与编辑说明</summary>
+    <ul>
+      <li>所有链接统一写固定内网 IP，局域网直连和 Tailscale 子网路由共用同一套地址。</li>
+      <li>手机在家直连 192.168.31.x；在外只需开启 Tailscale，经 Mac 的子网路由回家，<strong>不需要开翻墙 VPN</strong>。</li>
+      <li>代理软件把 <code>100.64.0.0/10</code> 与 <code>192.168.0.0/16</code> 设为直连，避免 Tailscale 流量被代理拦截。</li>
+      <li>路由器 DHCP 静态绑定：PC <code>.22</code>、Mac <code>.94</code>、NAS <code>.111</code>。</li>
+      <li>新增项目：在 Windows / 手机浏览器打开 <a href="edit.html">编辑页</a>，保存后本页 30 秒内自动更新；也可手动点右上角「刷新」。</li>
+    </ul>
+  </details>
+  <p class="foot-note"><span id="status">正在读取条目…</span> · <a href="edit.html">在 Windows / 手机上编辑条目</a></p>
+</footer>
+
+<script>
+/* 内置默认数据：只有 sites.json 读取失败时才使用。
+   日常请在编辑页（edit.html）增删条目，链接一律写固定内网 IP:端口。
+   group: basics(常用入口) / production(正式版) / testing(测试版) / lab(实验项目) */
+const DEFAULT_SITES = [
+  { group: 'basics', name: 'NAS',        url: 'http://192.168.31.111:5000', desc: '群晖 DSM · EzioNas.local', tag: '固定 IP' },
+  { group: 'basics', name: '路由器',     url: 'http://192.168.31.1',        desc: '小米路由器管理后台',       tag: '网关' },
+  { group: 'basics', name: 'Mac 开发机',  url: 'http://192.168.31.94:8000',  desc: '导航页宿主 · 常驻 Mac',     tag: '本机' }
+
+];
+let SITES = DEFAULT_SITES.slice();
+
+const GROUPS = [
+  { id: 'basics',    title: '常用入口', note: 'NAS、路由器与开发机' },
+  { id: 'production',title: '正式版',   note: '稳定可用，随时打开' },
+  { id: 'testing',   title: '测试版',   note: '联调与验收环境' },
+  { id: 'lab',       title: '实验项目', note: '随手搭的小玩意，可能随时关掉' },
+  { id: 'discovered',title: '自动发现', note: '各设备通过 9700 端口注册的服务' }
+];
+
+const root = document.getElementById('groups');
+const search = document.getElementById('search');
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
+function cardHtml(site) {
+  const initial = escapeHtml(String(site.name).trim().charAt(0).toUpperCase() || '·');
+  return `<div class="card" data-group="${escapeHtml(site.group)}"
+      data-text="${escapeHtml((site.name + ' ' + site.url + ' ' + (site.desc || '') + ' ' + (site.tag || '')).toLowerCase())}">
+      <a class="card-main" href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer">
+        <div class="card-top">
+          <span class="badge" aria-hidden="true">${initial}</span>
+          <h3>${escapeHtml(site.name)}</h3>
+          ${site.tag ? `<span class="tag">${escapeHtml(site.tag)}</span>` : ''}
+        </div>
+        <p class="desc">${escapeHtml(site.desc || '')}</p>
+      </a>
+      <div class="card-bottom">
+        <span class="url" title="${escapeHtml(site.url)}">${escapeHtml(site.url.replace(/^https?:\/\//, ''))}</span>
+        <button class="copy" type="button" data-url="${escapeHtml(site.url)}" aria-label="复制 ${escapeHtml(site.name)} 的地址">复制</button>
+      </div>
+    </div>`;
+}
+
+function render() {
+  root.innerHTML = GROUPS.map(group => {
+    const items = SITES.filter(site => site.group === group.id);
+    const placeholder = group.id === 'discovered'
+      ? '暂无注册服务 · 在设备上启动 agent.py 后点右上角「扫描」'
+      : `暂无条目 · 打开 <a href="edit.html">编辑页</a> 添加 <code>${escapeHtml(group.title)}</code> 项目`;
+    const cards = items.length ? items.map(cardHtml).join('') : `<div class="empty">${placeholder}</div>`;
+    return `<section class="section" data-section="${group.id}">
+        <div class="section-head"><h2>${escapeHtml(group.title)}</h2><span class="count" data-count="${group.id}">${items.length}</span></div>
+        <p class="section-note">${escapeHtml(group.note)}</p>
+        <div class="grid">${cards}</div>
+      </section>`;
+  }).join('') + '<p class="no-result" id="noResult" hidden>没有匹配的服务</p>';
+  applyFilter();
+}
+
+async function copyText(text) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return;
+    }
+  } catch (_) { /* 回退到 execCommand，局域网 http 下剪贴板 API 可能不可用 */ }
+  const input = document.createElement('textarea');
+  input.value = text;
+  input.setAttribute('readonly', '');
+  input.style.cssText = 'position:fixed;left:-9999px;top:0';
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  input.remove();
+}
+
+document.addEventListener('click', event => {
+  const button = event.target.closest('.copy');
+  if (!button) return;
+  event.preventDefault();
+  event.stopPropagation();
+  copyText(button.dataset.url).then(() => {
+    button.textContent = '已复制';
+    button.classList.add('done');
+    setTimeout(() => { button.textContent = '复制'; button.classList.remove('done'); }, 1500);
+  });
+});
+
+function applyFilter() {
+  const query = search.value.trim().toLowerCase();
+  let total = 0;
+  GROUPS.forEach(group => {
+    const section = root.querySelector(`[data-section="${group.id}"]`);
+    const cards = section.querySelectorAll('.card');
+    const empty = section.querySelector('.empty');
+    let shown = 0;
+    cards.forEach(card => {
+      const match = !query || card.dataset.text.includes(query);
+      card.hidden = !match;
+      if (match) shown++;
+    });
+    section.hidden = shown === 0 && (!!query || !empty);
+    if (empty) empty.hidden = !!query;
+    total += shown;
+  });
+  document.getElementById('noResult').hidden = total !== 0;
+}
+const statusEl = document.getElementById('status');
+const refreshBtn = document.getElementById('refresh');
+const scanBtn = document.getElementById('scan');
+
+function normalizeUrl(url) {
+  try {
+    const parsed = new URL(url, location.href);
+    let port = parsed.port;
+    if (parsed.protocol === 'http:' && port === '80') port = '';
+    if (parsed.protocol === 'https:' && port === '443') port = '';
+    return parsed.protocol + '//' + parsed.hostname.toLowerCase() + (port ? ':' + port : '') + parsed.pathname.replace(/\/$/, '');
+  } catch (_) {
+    return String(url).trim().toLowerCase().replace(/\/$/, '');
+  }
+}
+
+async function loadSites() {
+  refreshBtn.disabled = true;
+  let manual = DEFAULT_SITES.slice();
+  let manualOk = true;
+  let discovered = null;
+
+  try {
+    const response = await fetch('sites.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    const data = await response.json();
+    if (!Array.isArray(data) || data.some(item => !item || !item.group || !item.name || !item.url)) {
+      throw new Error('数据格式不正确');
+    }
+    manual = data;
+  } catch (_) {
+    manualOk = false;
+  }
+
+  try {
+    const response = await fetch('discovered.json?t=' + Date.now(), { cache: 'no-store' });
+    if (response.ok) discovered = await response.json();
+  } catch (_) { /* 扫描数据不可用时只显示手工条目 */ }
+
+  const seen = new Set(manual.map(item => normalizeUrl(item.url)));
+  const auto = (discovered && Array.isArray(discovered.services) ? discovered.services : [])
+    .filter(item => item && item.url)
+    .map(item => ({
+      group: 'discovered',
+      name: item.name || item.url,
+      url: item.url,
+      desc: '来自 ' + (item.device || item.host) + ' · ' + (item.desc || item.host + ':' + item.port),
+      tag: item.tag || '自动发现'
+    }))
+    .filter(item => {
+      const key = normalizeUrl(item.url);
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  SITES = manual.concat(auto);
+
+  const time = new Date().toLocaleTimeString('zh-CN', { hour12: false });
+  let info = discovered
+    ? (discovered.scanning ? ' · 正在扫描…' : (discovered.scannedAt ? ' · 扫描于 ' + String(discovered.scannedAt).slice(11, 19) + '，发现 ' + auto.length + ' 个' : ''))
+    : ' · 自动发现暂不可用';
+  statusEl.textContent = (manualOk ? '条目已更新 ' : '手工条目读取失败，使用默认值 ') + time + info;
+  render();
+  refreshBtn.disabled = false;
+}
+
+refreshBtn.addEventListener('click', loadSites);
+scanBtn.addEventListener('click', async () => {
+  scanBtn.disabled = true;
+  statusEl.textContent = '正在扫描局域网…';
+  try {
+    const token = localStorage.getItem('nav-edit-token') || '';
+    const headers = token ? { 'X-Token': token } : {};
+    const response = await fetch('api/scan', { method: 'POST', headers: headers });
+    const result = await response.json();
+    if (!response.ok || !result.ok) throw new Error(result.error || ('HTTP ' + response.status));
+  } catch (error) {
+    statusEl.textContent = '扫描失败：' + error.message;
+  }
+  await loadSites();
+  scanBtn.disabled = false;
+});
+setInterval(loadSites, 30000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) loadSites(); });
+
+search.addEventListener('input', applyFilter);
+document.addEventListener('keydown', event => {
+  if (event.key === '/' && document.activeElement !== search) {
+    event.preventDefault();
+    search.focus();
+  }
+  if (event.key === 'Escape' && document.activeElement === search) {
+    search.value = '';
+    applyFilter();
+    search.blur();
+  }
+});
+
+render();
+loadSites();
+</script>
+</body>
+</html>
