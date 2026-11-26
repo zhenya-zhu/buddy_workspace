@@ -1,7 +1,7 @@
 # buddy_workspace
 
 > 出海建站（独立站 + SEO）的工作区。方法论、架构决策、上线检查标准集中在这里，供人和 agent 共用。
-> 最后更新：2026-11-26
+> 最后更新：2026-11-27
 
 ---
 
@@ -66,10 +66,16 @@ buddy_workspace/
 │               ├── 09-coverage-audit.md             # 覆盖率审计（读了什么、没读什么）
 │               ├── 10-infra-payment-compliance.md   # 域名 / 部署 / AdSense / 收款 / 备案
 │               └── 11-ai-tool-site.md               # AI 工具站专属打法
-├── lan-nav/                              # 局域网导航页 + 设备服务自发现（本机运维工具）
-│   ├── README.md                         # 角色分工、9700 注册协议、快速使用与约定
-│   ├── 给其他机器Agent的接入指南.md       # 给其他机器上 Agent 的自包含操作手册
-│   ├── 需求与部署备忘.md                  # 需求、方案决策、验证记录与待办
+├── device-nav/                           # 每设备自己的导航页（推荐，本机运维工具）
+│   ├── README.md                         # 方案、自动发现规则、配置、API 与排障
+│   ├── server.py / detect.py             # 页面服务 + 只探测本机的 HTTP 服务
+│   ├── index.html / edit.html            # 导航页 + 手工入口编辑页
+│   ├── sites.json / services.json        # 手工入口 / 自动发现覆盖配置
+│   └── start-device.bat / start-device.command  # Windows / Mac 启动器
+├── lan-nav/                              # 旧：集中式导航页 + 9700 设备注册（保留参考）
+│   ├── README.md                         # 旧方案角色分工、9700 注册协议
+│   ├── 给其他机器Agent的接入指南.md       # 旧方案：给其他机器 Agent 的接入手册
+│   ├── 需求与部署备忘.md                  # 旧方案的需求、决策与验证记录
 │   └── agent.py / discover.py / server.py / index.html / edit.html / 启动器 / 配置
 └── vps_manage/                           # 本机 VPS 网络诊断（纯标准库）
     ├── netcheck.py                       # Python 3.9+ 标准库；TCP 建连成功率、p50/p95，可选 ICMP / iperf3 / HTTPS
@@ -94,7 +100,8 @@ buddy_workspace/
 | **设置环境/域名、部署、内容发布或回滚** | `frontend/decisions/ADR-002-*` | 验证环境隔离、发布审批、SEO 防护和回滚 |
 | **搭建个人多业务 K3s 开发平台** | `startup/website-dev/infrastructure/personal-k3s-platform.md` | 先验证 WSL/K3s，再做环境隔离、发布、GPU、备份与稳定性；不替代 ADR-002 的发布门禁 |
 | **选 VPS / 判断某条线路延迟行不行** | `vps_manage/README.md` | 在**实际使用的网络**上跑 `python3 vps_manage/netcheck.py`，看 TCP 成功率与 p95，跨时段复测；单次 Ping 不作结论 |
-| **在其他机器上接入局域网导航页** | `lan-nav/给其他机器Agent的接入指南.md` | 把 `agent.py`、`services.json`、对应启动器放同一目录并运行；本机 9700 端口上报 HTTP 服务清单，不扫网段、不改 Mac 文件 |
+| **每台设备维护自己的导航页（推荐）** | `device-nav/README.md` | 在设备上运行 `server.py`；自动列本机 HTTP 服务 + `sites.json` 手工入口；不扫描网段、不依赖 Mac |
+| **接入旧的集中式导航页** | `lan-nav/给其他机器Agent的接入指南.md` | 旧方案：设备跑 9700 代理，Mac 统一扫描；保留参考，新部署不要再用 |
 | **判断一个关键词值不值得做** | `seo-playbook/references/01` | 算 KDRoi + KGR，看词龄，人工看 SERP 前 10 |
 | **规划站点结构 / 页面类型** | `seo-playbook/references/02` | 一个关键词一个域名；页面深度 ≤3；别默认做博客 |
 | **准备上线，做放行审核** | `seo-playbook/SKILL.md` + `references/07` | 跑 8 阶段 P0 项，任一红线命中就停 |
@@ -132,10 +139,11 @@ buddy_workspace/
 | 首站开发执行里程碑、门禁与延后事项 | `startup/website-dev/frontend/development-roadmap.md` | 更新 M0–M7 里程碑/验收；具体站点实施证据放其独立代码仓库 |
 | 具体某个站的项目代码 | 另开仓库，不放在这里 | — |
 | 本机诊断 / 运维小脚本（非站点业务代码） | `vps_manage/` 或同级新目录 | `kebab-case.py` + 同目录 `README.md`；单文件、纯标准库优先 |
-| 局域网导航页 / 设备服务注册脚本与手册 | `lan-nav/` | `README.md` + 原文件名；运行时的 `discovered.json` 不入库 |
+| 每设备自己的导航页（推荐） | `device-nav/` | `README.md` + `server.py` / `detect.py` / `index.html` / `edit.html` / 启动器 / JSON 配置 |
+| 旧集中式导航页 / 9700 注册脚本 | `lan-nav/` | 保留参考；运行时的 `discovered.json` 不入库 |
 | 上线审核记录 / 复盘 | `startup/website-dev/seo-playbook/reviews/` | `YYYY-MM-DD-域名.md` |
 
-**不要**把这个仓库变成代码仓库。它只放「标准、决策、复盘」，代码在各自的 repo。例外是 `vps_manage/` 和 `lan-nav/`：单文件 / 纯标准库的本机诊断与运维工具，不承载任何站点业务逻辑。
+**不要**把这个仓库变成代码仓库。它只放「标准、决策、复盘」，代码在各自的 repo。例外是 `vps_manage/`、`device-nav/` 和 `lan-nav/`：单文件 / 纯标准库的本机诊断与运维工具，不承载任何站点业务逻辑。
 
 ---
 
@@ -150,6 +158,8 @@ buddy_workspace/
 ---
 
 ## 7. 变更记录
+
+- **2026-11-27** 新增 `device-nav/`：改为每台设备维护自己的导航页，只探测本机 HTTP 服务（不再依赖 Mac 扫描与 9700 注册）。包含页面、编辑页、本机探测、启动器、配置与 README；同步更新总览目录树和任务路由，并把 `lan-nav/` 标记为旧方案。
 
 - **2026-11-26** 新增 `lan-nav/`：局域网导航页与设备服务自发现的一整套代码与文档（中心 Mac 的页面/扫描/API，设备端 9700 注册代理，Windows/Mac 启动器，给其他机器 Agent 的接入指南与需求备忘）；在总览目录树、任务路由和新增内容规则中补齐入口。仅为本机运维工具，不涉及站点业务代码。
 
