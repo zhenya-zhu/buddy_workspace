@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """每台设备自己的导航页：静态页面 + 本机服务探测 + 手工入口保存。
 
-不扫描网段，不读取其他设备；默认监听 0.0.0.0:8000。
+不扫描网段，不读取其他设备；默认监听 0.0.0.0:6996。
 仅使用 Python 标准库。
 """
 
@@ -20,7 +20,7 @@ from detect import collect_services, lan_ip
 BASE = Path(__file__).resolve().parent
 SITES_FILE = BASE / "sites.json"
 SERVICES_FILE = BASE / "services.json"
-PORT = int(os.environ.get("PORT", "8000"))
+PORT = int(os.environ.get("PORT", "6996"))
 TOKEN = os.environ.get("NAV_EDIT_TOKEN", "")
 ALLOWED_GROUPS = {"basics", "production", "testing", "lab"}
 MAX_BODY = 1024 * 1024

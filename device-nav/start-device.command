@@ -1,5 +1,5 @@
 #!/bin/bash
-# 在本机启动导航页（默认端口 8000）。停止按 Control + C。
+# 在本机启动导航页（默认端口 6996）。停止按 Control + C。
 cd "$(dirname "$0")" || exit 1
 
 if [ -n "$DEVICE_NAV_PYTHON" ]; then
