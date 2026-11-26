@@ -73,6 +73,7 @@
 
 <script>
 const GROUPS = [
+  { id: 'devices', label: '其他设备' },
   { id: 'basics', label: '常用入口' },
   { id: 'production', label: '正式版' },
   { id: 'testing', label: '测试版' },
@@ -93,7 +94,8 @@ function setStatus(text, kind) {
 }
 function addRow(item) {
   item = item || {};
-  const options = GROUPS.map(g => `<option value="${g.id}"${g.id === item.group ? ' selected' : ''}>${g.label}</option>`).join('');
+  const current = item.group || 'basics';
+  const options = GROUPS.map(g => `<option value="${g.id}"${g.id === current ? ' selected' : ''}>${g.label}</option>`).join('');
   rows.insertAdjacentHTML('beforeend', `<div class="row">
       <select class="group">${options}</select>
       <input class="name" type="text" value="${esc(item.name)}" placeholder="服务名称">

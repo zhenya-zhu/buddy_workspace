@@ -70,8 +70,9 @@ buddy_workspace/
 │   ├── README.md                         # 方案、自动发现规则、配置、API 与排障
 │   ├── server.py / detect.py             # 页面服务 + 只探测本机的 HTTP 服务
 │   ├── index.html / edit.html            # 导航页 + 手工入口编辑页
-│   ├── sites.json / services.json        # 手工入口 / 自动发现覆盖配置
-│   └── start-device.bat / start-device.command  # Windows / Mac 启动器
+│   ├── sites.json / services.json        # 手工入口（含「其他设备」分组）/ 自动发现覆盖配置
+│   ├── start-device.bat / start-device.command  # Windows / Mac 启动器
+│   └── install-autostart.bat / uninstall-autostart.bat / autostart.ps1  # 登录自启动
 ├── lan-nav/                              # 旧：集中式导航页 + 9700 设备注册（保留参考）
 │   ├── README.md                         # 旧方案角色分工、9700 注册协议
 │   ├── 给其他机器Agent的接入指南.md       # 旧方案：给其他机器 Agent 的接入手册
@@ -100,7 +101,7 @@ buddy_workspace/
 | **设置环境/域名、部署、内容发布或回滚** | `frontend/decisions/ADR-002-*` | 验证环境隔离、发布审批、SEO 防护和回滚 |
 | **搭建个人多业务 K3s 开发平台** | `startup/website-dev/infrastructure/personal-k3s-platform.md` | 先验证 WSL/K3s，再做环境隔离、发布、GPU、备份与稳定性；不替代 ADR-002 的发布门禁 |
 | **选 VPS / 判断某条线路延迟行不行** | `vps_manage/README.md` | 在**实际使用的网络**上跑 `python3 vps_manage/netcheck.py`，看 TCP 成功率与 p95，跨时段复测；单次 Ping 不作结论 |
-| **每台设备维护自己的导航页（推荐）** | `device-nav/README.md` | 在设备上运行 `server.py`；自动列本机 HTTP 服务 + `sites.json` 手工入口；不扫描网段、不依赖 Mac |
+| **每台设备维护自己的导航页（推荐）** | `device-nav/README.md` | 在设备上运行 `server.py`（默认 6996）；自动列本机 HTTP 服务并按可用性排序 + `sites.json` 手工入口（含「其他设备」跳转）；不扫描网段、不依赖 Mac；Windows 用 `install-autostart.bat` 设登录自启动 |
 | **接入旧的集中式导航页** | `lan-nav/给其他机器Agent的接入指南.md` | 旧方案：设备跑 9700 代理，Mac 统一扫描；保留参考，新部署不要再用 |
 | **判断一个关键词值不值得做** | `seo-playbook/references/01` | 算 KDRoi + KGR，看词龄，人工看 SERP 前 10 |
 | **规划站点结构 / 页面类型** | `seo-playbook/references/02` | 一个关键词一个域名；页面深度 ≤3；别默认做博客 |
@@ -139,7 +140,7 @@ buddy_workspace/
 | 首站开发执行里程碑、门禁与延后事项 | `startup/website-dev/frontend/development-roadmap.md` | 更新 M0–M7 里程碑/验收；具体站点实施证据放其独立代码仓库 |
 | 具体某个站的项目代码 | 另开仓库，不放在这里 | — |
 | 本机诊断 / 运维小脚本（非站点业务代码） | `vps_manage/` 或同级新目录 | `kebab-case.py` + 同目录 `README.md`；单文件、纯标准库优先 |
-| 每设备自己的导航页（推荐） | `device-nav/` | `README.md` + `server.py` / `detect.py` / `index.html` / `edit.html` / 启动器 / JSON 配置 |
+| 每设备自己的导航页（推荐） | `device-nav/` | `README.md` + `server.py` / `detect.py` / `index.html` / `edit.html` / 启动器 / 自启动脚本 / JSON 配置 |
 | 旧集中式导航页 / 9700 注册脚本 | `lan-nav/` | 保留参考；运行时的 `discovered.json` 不入库 |
 | 上线审核记录 / 复盘 | `startup/website-dev/seo-playbook/reviews/` | `YYYY-MM-DD-域名.md` |
 
@@ -158,6 +159,8 @@ buddy_workspace/
 ---
 
 ## 7. 变更记录
+
+- **2026-11-27** `device-nav/` 三处增强：① 默认端口从 8000 改为 **6996**（回退 6997–7015），避开常见的 8000 占用；② 「本机服务」按可用性排序——`status < 400` 且有 `<title>` 的排前面，4xx/5xx 或无标题的淡化显示并加「打不开」标签、排到本组最后；③ 新增「其他设备」分组（`sites.json` 里 `group: "devices"`），可放 Mac / 其他设备的导航页快捷方式；④ 新增 `install-autostart.bat` / `uninstall-autostart.bat` / `autostart.ps1`，在当前用户「启动」文件夹建快捷方式实现登录自启动，README 补齐 macOS launchd 做法。
 
 - **2026-11-27** 新增 `device-nav/`：改为每台设备维护自己的导航页，只探测本机 HTTP 服务（不再依赖 Mac 扫描与 9700 注册）。包含页面、编辑页、本机探测、启动器、配置与 README；同步更新总览目录树和任务路由，并把 `lan-nav/` 标记为旧方案。
 

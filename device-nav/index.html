@@ -164,10 +164,15 @@
   .copy.done { color: #0f766e; border-color: #99f6e4; background: #f0fdfa; }
 
   [data-group="local"]     { --tone: #0f766e; --tint: #ccfbf1; }
+  [data-group="devices"]   { --tone: #0369a1; --tint: #e0f2fe; }
   [data-group="basics"]    { --tone: #0f766e; --tint: #ccfbf1; }
   [data-group="production"]{ --tone: #15803d; --tint: #dcfce7; }
   [data-group="testing"]   { --tone: #b45309; --tint: #fef3c7; }
   [data-group="lab"]       { --tone: #6d28d9; --tint: #ede9fe; }
+
+  .card.dead { opacity: .58; }
+  .card.dead:hover { opacity: .85; }
+  .tag-dead { color: #b91c1c; background: #fee2e2; }
 
   .empty {
     border: 1px dashed #cbd5e1; border-radius: var(--radius);
@@ -234,7 +239,8 @@
 
 <script>
 const GROUPS = [
-  { id: 'local',      title: '本机服务', note: '自动识别这台设备上监听 0.0.0.0 或内网 IP 的 HTTP 服务' },
+  { id: 'local',      title: '本机服务', note: '自动识别这台设备上监听 0.0.0.0 或内网 IP 的 HTTP 服务，打不开的排在后面' },
+  { id: 'devices',    title: '其他设备', note: '同一局域网里其他设备的导航页或管理页，点开直接跳过去' },
   { id: 'basics',     title: '常用入口', note: 'NAS、路由器和其他设备的固定入口' },
   { id: 'production', title: '正式版',   note: '稳定可用，随时打开' },
   { id: 'testing',    title: '测试版',   note: '联调与验收环境' },
@@ -275,20 +281,27 @@ function allSites() {
       name: item.name || item.url,
       url: item.url,
       desc: item.desc || '',
-      tag: item.tag || '本机'
+      tag: item.tag || '本机',
+      ok: item.ok !== false,
+      status: item.status || 0
     }));
   return auto.concat(MANUAL.filter(item => item && item.group && item.name && item.url));
 }
 
 function cardHtml(site) {
   const initial = escapeHtml(String(site.name).trim().charAt(0).toUpperCase() || '·');
-  return `<div class="card" data-group="${escapeHtml(site.group)}"
+  const dead = site.ok === false;
+  const tagHtml = [
+    site.tag ? `<span class="tag">${escapeHtml(site.tag)}</span>` : '',
+    dead ? '<span class="tag tag-dead">打不开</span>' : ''
+  ].join('');
+  return `<div class="card${dead ? ' dead' : ''}" data-group="${escapeHtml(site.group)}"
       data-text="${escapeHtml((site.name + ' ' + site.url + ' ' + (site.desc || '') + ' ' + (site.tag || '')).toLowerCase())}">
       <a class="card-main" href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer">
         <div class="card-top">
           <span class="badge" aria-hidden="true">${initial}</span>
           <h3>${escapeHtml(site.name)}</h3>
-          ${site.tag ? `<span class="tag">${escapeHtml(site.tag)}</span>` : ''}
+          ${tagHtml}
         </div>
         <p class="desc">${escapeHtml(site.desc || '')}</p>
       </a>

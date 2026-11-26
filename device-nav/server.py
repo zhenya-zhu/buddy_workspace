@@ -22,7 +22,7 @@ SITES_FILE = BASE / "sites.json"
 SERVICES_FILE = BASE / "services.json"
 PORT = int(os.environ.get("PORT", "6996"))
 TOKEN = os.environ.get("NAV_EDIT_TOKEN", "")
-ALLOWED_GROUPS = {"basics", "production", "testing", "lab"}
+ALLOWED_GROUPS = {"devices", "basics", "production", "testing", "lab"}
 MAX_BODY = 1024 * 1024
 
 

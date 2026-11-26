@@ -36,13 +36,16 @@
 | 文件 | 作用 |
 |---|---|
 | `server.py` | 静态页面 + 本机服务探测 API + 手工入口保存 API |
-| `detect.py` | 只探测本机监听端口，判断是否 HTTP、抓 `<title>` |
-| `index.html` | 导航页：本机服务 / 常用入口 / 正式版 / 测试版 / 实验项目 |
-| `edit.html` | 浏览器里增删改手工入口 |
+| `detect.py` | 只探测本机监听端口，判断是否 HTTP、抓 `<title>`、记状态码并排序 |
+| `index.html` | 导航页：本机服务 / 其他设备 / 常用入口 / 正式版 / 测试版 / 实验项目 |
+| `edit.html` | 浏览器里增删改手工入口（含「其他设备」分组） |
 | `sites.json` | 手工入口数据源（NAS、路由器、其他设备） |
 | `services.json` | 可选：按端口覆盖自动发现的名称 / 备注 / 标签，或屏蔽端口 |
 | `start-device.bat` | Windows 一键启动 |
 | `start-device.command` | Mac / Linux 一键启动 |
+| `install-autostart.bat` | Windows 登录自启动（在当前用户「启动」文件夹建快捷方式） |
+| `uninstall-autostart.bat` | 取消 Windows 登录自启动 |
+| `autostart.ps1` | 上面两个 bat 实际调用的脚本，也可手动执行 |
 
 运行时不需要 `agent.py`、`discover.py`，也不需要改 Mac 上的任何文件。
 
@@ -89,12 +92,22 @@ curl http://127.0.0.1:6996/api/sites
 | 分组 | 来源 | 说明 |
 |---|---|---|
 | 本机服务 | 自动探测 | 这台设备上监听 `0.0.0.0` 或内网 IP 的 HTTP 服务 |
+| 其他设备 | `sites.json`（`group: "devices"`） | 同一局域网里其他设备的导航页 / 管理页，点开直接跳过去 |
 | 常用入口 | `sites.json` | NAS、路由器、其他设备的固定地址 |
 | 正式版 | `sites.json` | 稳定可用的项目 |
 | 测试版 | `sites.json` | 联调 / 验收环境 |
 | 实验项目 | `sites.json` | 随手搭的小玩意 |
 
 「本机服务」始终显示；其他分组有内容才显示。如果一条手工入口都没有，页面会出现一个「手工入口」空卡片，点进去就是编辑页。
+
+### 4.1 「本机服务」内部排序
+
+同一分组里按「能不能打开」分两档，**可用的在前，打不开的在后**：
+
+- 可用：HTTP 状态码 < 400，且页面有 `<title>`；
+- 打不开：无 `<title>`、或返回 4xx / 5xx（例如 `400 Bad Request`、`503 Service Unavailable`）。这类卡片会淡化显示，右上角加红色「打不开」标签，但仍可点开看一眼。
+
+同档内部按端口号升序；手工入口（无端口）排在同档末尾。顺序由 `detect.py` 给出，页面不再重排。
 
 ---
 
@@ -104,7 +117,7 @@ curl http://127.0.0.1:6996/api/sites
 
 1. 用 `netstat -ano -p TCP`（Windows）/ `lsof`（macOS）/ `ss -ltn`（Linux）列出本机监听中的 TCP 端口。
 2. 只保留绑定 `0.0.0.0`、`*`、`[::]` 或**本机内网 IP** 的端口；只绑 `127.0.0.1` / `::1` 的会被排除（手机连不上）。
-3. 对候选端口并发发一个 HTTP GET，确认它说 HTTP，并抓 `<title>` 作为默认名称。
+3. 对候选端口并发发一个 HTTP GET，确认它说 HTTP，抓 `<title>` 作为默认名称，并记下状态码。
 4. 用 `services.json` 覆盖名称 / 备注 / 标签，或屏蔽端口。
 5. 返回 JSON。
 
@@ -161,6 +174,13 @@ curl http://127.0.0.1:6996/api/sites
 ```json
 [
   {
+    "group": "devices",
+    "name": "Mac · 导航页",
+    "url": "http://192.168.31.94:6996",
+    "desc": "MacBook Pro · 局域网导航页",
+    "tag": "Mac"
+  },
+  {
     "group": "basics",
     "name": "NAS",
     "url": "http://192.168.31.111:5000",
@@ -177,7 +197,9 @@ curl http://127.0.0.1:6996/api/sites
 ]
 ```
 
-`group` 只能是 `basics` / `production` / `testing` / `lab`。名称和地址不能为空，地址必须以 `http://` 或 `https://` 开头。
+`group` 只能是 `devices` / `basics` / `production` / `testing` / `lab`。名称和地址不能为空，地址必须以 `http://` 或 `https://` 开头。
+
+想让页面顶部多几个「跳到别的设备」的快捷方式，就给每台设备加一条 `group: "devices"`，地址写那台设备导航页的完整 URL（例如 Mac 上跑 `device-nav` 后就是 `http://<Mac的IP>:6996`）。
 
 如果手工入口和自动发现是同一个 URL，页面会优先显示手工入口，避免重复卡片。
 
@@ -200,6 +222,59 @@ set PORT=6997
 set NAV_EDIT_TOKEN=your-token
 start-device.bat
 ```
+
+### 6.4 开机 / 登录自启动
+
+#### Windows
+
+双击 `install-autostart.bat`，它会在当前用户的「启动」文件夹里建一个快捷方式：
+
+```
+%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\device-nav.lnk
+```
+
+之后每次登录 Windows，页面会在 6996 端口自动就绪，不用再手动开终端。
+
+- **取消**：双击 `uninstall-autostart.bat`，或直接删掉上面那个 `.lnk`。
+- **默认用 `python.exe`**：多数机器安装 Python 时已经放行过 `python.exe` 的入站，能保证手机访问；代价是任务栏会有一个最小化的终端窗口。
+- **想要完全无窗口**：用管理员 PowerShell 放行一次 `pythonw.exe`，再执行：
+  ```powershell
+  powershell -ExecutionPolicy Bypass -File autostart.ps1 -UsePythonw
+  ```
+  放行命令（需管理员）：
+  ```powershell
+  New-NetFirewallRule -DisplayName "Device Nav pythonw" -Direction Inbound -Program "C:\python313\pythonw.exe" -Protocol TCP -Action Allow -Profile Private,Public
+  ```
+- 自启动用的是**绝对路径**：把目录搬走或改名后，重新跑一次 `install-autostart.bat`。
+
+#### macOS
+
+用 launchd，在 `~/Library/LaunchAgents/` 下建一个 plist：
+
+```bash
+cat > ~/Library/LaunchAgents/com.local.device-nav.plist <<'PLIST'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>com.local.device-nav</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>/Users/你的用户名/device-nav/server.py</string>
+  </array>
+  <key>WorkingDirectory</key><string>/Users/你的用户名/device-nav</string>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+</dict>
+</plist>
+PLIST
+launchctl load ~/Library/LaunchAgents/com.local.device-nav.plist
+```
+
+取消：`launchctl unload ~/Library/LaunchAgents/com.local.device-nav.plist`。
+
+本仓库没带 macOS 的自启动脚本，因为 Mac 上更常见的是用一个常开的终端窗口或 `nohup`；需要的话按上面 plist 手动配一次即可。
 
 ---
 
@@ -228,11 +303,25 @@ start-device.bat
       "desc": "192.168.31.22:8765",
       "tag": "本机",
       "port": 8765,
-      "title": "视频库 · 局域网"
+      "title": "视频库 · 局域网",
+      "status": 200,
+      "ok": true
+    },
+    {
+      "name": "Service Unavailable",
+      "url": "http://192.168.31.22:5357",
+      "desc": "Service Unavailable",
+      "tag": "本机",
+      "port": 5357,
+      "title": "Service Unavailable",
+      "status": 503,
+      "ok": false
     }
   ]
 }
 ```
+
+`status` 是探测到的 HTTP 状态码，`ok` 表示这张卡片是否可用（`status < 400` 且有标题）。数组已经按「可用在前、打不开在后」排好，前端不再重排。
 
 ---
 
@@ -264,6 +353,9 @@ start-device.bat
 | 编辑页保存 401 | 启动时设了 `NAV_EDIT_TOKEN`，在编辑页输入口令；口令存在浏览器 localStorage |
 | 保存后页面没变 | 页面 20 秒自动刷新；点右上「刷新」可立即更新 |
 | 端口 6996 被占 | 默认会自动改用 6997–7015；也可 `PORT=6997` 手动指定。页面里的地址会自动用实际端口 |
+| 系统端口显示在前面 | 不应该：`ok=false` 的卡片一定排在本组最后。若没生效，重启 `server.py`（旧进程不会加载新代码） |
+| 自启动没生效 | 看 `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup\device-nav.lnk` 是否存在；目录搬过家就重跑 `install-autostart.bat` |
+| 自启动后手机打不开 | 自启动用的是 `python.exe`，大多已放行；若改用 `-UsePythonw` 而没放行防火墙，就会只在本机能开 |
 
 ---
 
@@ -282,7 +374,10 @@ start-device.bat
 - [ ] `http://127.0.0.1:6996/` 返回 200，页面标题显示设备名和本机 IP。
 - [ ] `curl http://127.0.0.1:6996/api/services` 返回 JSON，`services` 是数组。
 - [ ] 本机某个监听 `0.0.0.0` 的 HTTP 服务出现在「本机服务」，点击能打开。
+- [ ] 返回 4xx / 5xx 的端口（如 `Bad Request`）淡化显示、「打不开」标签、排在本组最后。
+- [ ] 编辑页能选「其他设备」分组，加一条 Mac 的导航页地址后出现在「其他设备」区块。
 - [ ] 手机 / iPad 用 `http://<本机IP>:6996/` 能打开页面并点进服务。
 - [ ] 编辑页能新增一条手工入口，保存后 20 秒内出现在对应分组。
 - [ ] 把某个服务停掉，点「刷新」后对应卡片消失。
 - [ ] 需要时设置 `NAV_EDIT_TOKEN`，不带口令保存返回 401。
+- [ ] 跑过 `install-autostart.bat` 后重启（或注销再登录），页面自动就绪。

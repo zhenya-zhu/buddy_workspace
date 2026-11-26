@@ -139,7 +139,12 @@ def probe(port):
             except Exception:
                 continue
         title = html.unescape(re.sub(r"\s+", " ", title)).strip()[:80]
-    return title, first_line.strip()
+
+    try:
+        code = int(first_line.split()[1])
+    except (IndexError, ValueError):
+        code = 0
+    return title, first_line.strip(), code
 
 
 def load_config(path):
@@ -204,13 +209,15 @@ def collect_services(config_path=None, exclude_ports=(), allow_high_ports=False,
         for port, result in probed:
             if not result:
                 continue
-            title, status = result
+            title, status, code = result
             override = overrides.get(port, {})
             url = override.get("url") or ("http://%s:%d" % (ip, port))
             url_key = url.lower().rstrip("/")
             if url_key in seen_urls:
                 continue
             seen_urls.add(url_key)
+            # 4xx/5xx 或没有 <title>，基本是协议错误页 / 报错页，算「打不开」。
+            ok = bool(title) and code < 400
             services.append({
                 "name": override.get("name") or title or ("%s:%d" % (ip, port)),
                 "url": url,
@@ -218,6 +225,8 @@ def collect_services(config_path=None, exclude_ports=(), allow_high_ports=False,
                 "tag": override.get("tag") or "本机",
                 "port": port,
                 "title": title,
+                "status": code,
+                "ok": ok,
             })
 
         for item in extras:
@@ -235,8 +244,15 @@ def collect_services(config_path=None, exclude_ports=(), allow_high_ports=False,
                 "tag": item.get("tag") or "手工",
                 "port": item.get("port"),
                 "title": "",
+                "status": 0,
+                "ok": True,
             })
 
-        services.sort(key=lambda item: (item.get("port") is None, item.get("port") or 0))
+        # 可用的排前面，打不开的（无标题 / 5xx）排到本组最后。
+        services.sort(key=lambda item: (
+            not item.get("ok", True),
+            item.get("port") is None,
+            item.get("port") or 0,
+        ))
         _cache.update({"time": now, "key": key, "services": services})
         return list(services)

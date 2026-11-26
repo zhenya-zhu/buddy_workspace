@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "group": "devices",
+    "name": "Mac · 导航页",
+    "url": "http://192.168.31.94:8000",
+    "desc": "MacBook Pro · 局域网导航页",
+    "tag": "Mac"
+  }
+]
